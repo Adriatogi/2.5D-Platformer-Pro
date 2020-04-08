@@ -18,6 +18,9 @@ public class Player : MonoBehaviour
     private int _collectedCoins = 0;
     private UIManager _UIManager;
 
+    [SerializeField]
+    private int _lives = 3;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,9 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("UIManager is null");
         }
+
+        _UIManager.updateCoinsDisplay(_collectedCoins);
+        _UIManager.updateLivesDisplay(_lives);
     }
 
     // Update is called once per frame
