@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -75,5 +76,16 @@ public class Player : MonoBehaviour
     {
         _collectedCoins++;
         _UIManager.updateCoinsDisplay(_collectedCoins);
+    }
+
+    public void damage()
+    {
+        _lives--;
+        _UIManager.updateLivesDisplay(_lives);
+
+        if(_lives < 1)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }
