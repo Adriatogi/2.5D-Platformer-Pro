@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#AssetStoreStuff
+/[Aa]ssets/BayatGames
+/[Aa]ssets/BayatGames.meta
