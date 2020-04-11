@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
 
     private int _collectedCoins = 0;
     private UIManager _UIManager;
+    private SpriteRenderer _spriteRenderer;
     private Animator _animator;
 
     [SerializeField]
@@ -29,7 +30,13 @@ public class Player : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _animator = GetComponent<Animator>();
-        if(_animator == null)
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (_spriteRenderer == null)
+        {
+            Debug.LogError("Sprite Renderer is null");
+        }
+        if (_animator == null)
         {
             Debug.LogError("Animator is null");
         }
@@ -50,6 +57,29 @@ public class Player : MonoBehaviour
         Vector3 velocity = direction * _speed;
 
         //Changed cached _yVelocity
+        jumping();
+
+        //Flipping Character
+
+        if (horizontalInput < 0)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        else if (horizontalInput > 0)
+        {
+            _spriteRenderer.flipX = false;
+        }
+
+
+        // Update movement
+        velocity.y = _yVelocity;
+        _animator.SetFloat("Speed", direction.sqrMagnitude);
+        _characterController.Move(velocity * Time.deltaTime);
+        
+    }
+
+    private void jumping()
+    {
         if (_characterController.isGrounded)
         {
             //Single Jump
@@ -71,14 +101,7 @@ public class Player : MonoBehaviour
             //Make player fall
             _yVelocity -= _gravity;
         }
-
-        // Update movement
-        velocity.y = _yVelocity;
-        _animator.SetFloat("Speed", direction.sqrMagnitude);
-        _characterController.Move(velocity * Time.deltaTime);
-        
     }
-
     public void collectedCoin()
     {
         _collectedCoins++;
