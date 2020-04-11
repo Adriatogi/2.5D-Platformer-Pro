@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
 
     private int _collectedCoins = 0;
     private UIManager _UIManager;
+    private Animator _animator;
 
     [SerializeField]
     private int _lives = 3;
@@ -27,7 +28,12 @@ public class Player : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        if(_UIManager == null)
+        _animator = GetComponent<Animator>();
+        if(_animator == null)
+        {
+            Debug.LogError("Animator is null");
+        }
+        if (_UIManager == null)
         {
             Debug.LogError("UIManager is null");
         }
@@ -68,6 +74,7 @@ public class Player : MonoBehaviour
 
         // Update movement
         velocity.y = _yVelocity;
+        _animator.SetFloat("Speed", direction.sqrMagnitude);
         _characterController.Move(velocity * Time.deltaTime);
         
     }
