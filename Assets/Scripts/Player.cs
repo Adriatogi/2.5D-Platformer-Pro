@@ -73,7 +73,10 @@ public class Player : MonoBehaviour
 
         // Update movement
         velocity.y = _yVelocity;
+        _animator.SetFloat("HorizontalInput", horizontalInput);
         _animator.SetFloat("Speed", direction.sqrMagnitude);
+        Debug.Log(_yVelocity);
+        _animator.SetFloat("VelocityY", velocity.y);
         _characterController.Move(velocity * Time.deltaTime);
         
     }
@@ -82,6 +85,7 @@ public class Player : MonoBehaviour
     {
         if (_characterController.isGrounded)
         {
+            _yVelocity = 0;
             //Single Jump
             if (Input.GetKey(KeyCode.Space))
             {
