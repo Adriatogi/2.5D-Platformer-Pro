@@ -5,11 +5,12 @@ using UnityEngine;
 public class DeadZone : MonoBehaviour
 {
     [SerializeField]
-    private GameObject respawnPoint;
+    private Transform respawnPoint;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        respawnPoint = GameObject.Find("Respawn_Point").transform;
     }
 
     // Update is called once per frame
@@ -35,9 +36,10 @@ public class DeadZone : MonoBehaviour
                 cc.enabled = false;
             }
 
-            other.transform.position = respawnPoint.transform.position;
+            other.transform.position = respawnPoint.position;
 
             StartCoroutine(CCEnableRoutine(cc));
+
         }
     }
 
