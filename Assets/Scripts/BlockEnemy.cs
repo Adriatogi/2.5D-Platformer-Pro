@@ -16,6 +16,8 @@ public class BlockEnemy : MonoBehaviour
     private float _floatSpeed = 10;
     Vector3 position;
 
+    private bool _isDead = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,5 +68,4 @@ public class BlockEnemy : MonoBehaviour
         }
         transform.position = position;
     }
-
 }
