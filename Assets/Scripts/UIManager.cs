@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField]
     private Text _coinCountText, _livesCountText;
+    [SerializeField]
+    private GameObject _restartPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -28,5 +30,10 @@ public class UIManager : MonoBehaviour
     public void updateLivesDisplay(int lives)
     {
         _livesCountText.text = "Lives: " + lives;
+    }
+
+    public void activateRestartUI()
+    {
+        _restartPanel.SetActive(true);
     }
 }

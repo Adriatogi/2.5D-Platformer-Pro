@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     private UIManager _UIManager;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
+    private GameManager _gameManager;
 
     [SerializeField]
     private int _lives = 3;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
         if (_spriteRenderer == null)
         {
@@ -43,6 +45,10 @@ public class Player : MonoBehaviour
         if (_UIManager == null)
         {
             Debug.LogError("UIManager is null");
+        }
+        if(_gameManager == null)
+        {
+            Debug.LogError("GameManager is null");
         }
 
         _UIManager.updateCoinsDisplay(_collectedCoins);
@@ -115,10 +121,19 @@ public class Player : MonoBehaviour
     {
         _lives--;
         _UIManager.updateLivesDisplay(_lives);
-
-        if(_lives < 1)
+        if (_lives == 0)
         {
-            SceneManager.LoadScene(0);
+            _UIManager.activateRestartUI();
+            _gameManager.gameOver();
         }
+    }
+    private void gameOver()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public int getLives()
+    {
+        return _lives;
     }
 }

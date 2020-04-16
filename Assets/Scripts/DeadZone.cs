@@ -42,47 +42,55 @@ public class DeadZone : MonoBehaviour
                
             }
 
+            int playerLives = player.getLives();
             if (_isEnemyDeadZone == false)
             {
-                StartCoroutine(fallPlayerRespawn(_vCam, other, cc));
+                StartCoroutine(fallPlayerRespawn(_vCam, other, cc, playerLives));
             }
             else
             {
-                StartCoroutine(enemyPlayerRespawn(_vCam, other));
+                StartCoroutine(enemyPlayerRespawn(_vCam, other, playerLives));
             }
         }
     }
 
-    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, Collider other, CharacterController cc)
+    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, Collider other, CharacterController cc, int lives)
     {
         //Camera stop and continue following
         vCam.enabled = false;
         yield return new WaitForSeconds(1.5f);
-        vCam.enabled = true;
-
-        _damaged = false;
-
-        //Disable to reset speed
-        if (cc != null)
+        
+        if (lives != 0)
         {
-            cc.enabled = false;
-        }
+            vCam.enabled = true;
 
-        //Relocate character
-        other.transform.position = _respawnPoint.position;
-        yield return new WaitForSeconds(0.08f);
-        cc.enabled = true;
+            _damaged = false;
+            //Disable to reset speed
+            if (cc != null)
+            {
+                cc.enabled = false;
+            }
+
+            //Relocate character
+            other.transform.position = _respawnPoint.position;
+            yield return new WaitForSeconds(0.08f);
+            cc.enabled = true;
+        }
     }
 
-    IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider other)
+    IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider other, int lives)
     {
         other.gameObject.SetActive(false);
         vCam.enabled = false;
         yield return new WaitForSeconds(1.5f);
-        vCam.enabled = true;
-        _damaged = false;
-        other.transform.position = _respawnPoint.position;
-        other.gameObject.SetActive(true);
+
+        if (lives != 0)
+        {
+            vCam.enabled = true;
+            _damaged = false;
+            other.transform.position = _respawnPoint.position;
+            other.gameObject.SetActive(true);
+        }
     }
 
     public void _enemyDeadZone()
