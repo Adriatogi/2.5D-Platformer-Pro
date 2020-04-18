@@ -17,8 +17,6 @@ public class BlockEnemy : MonoBehaviour
     private Vector3 _position;
     private DeadZone _deadZone;
 
-    private bool _isDead = false;
-
 
     // Start is called before the first frame update
     void Start()
