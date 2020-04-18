@@ -24,12 +24,12 @@ public class UIManager : MonoBehaviour
 
     public void updateCoinsDisplay(int coins)
     {
-        _coinCountText.text = "Coins: " + coins;
+        _coinCountText.text = coins.ToString();
     }
 
     public void updateLivesDisplay(int lives)
     {
-        _livesCountText.text = "Lives: " + lives;
+        _livesCountText.text = lives.ToString();
     }
 
     public void activateRestartUI()
