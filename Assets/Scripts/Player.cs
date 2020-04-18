@@ -120,6 +120,8 @@ public class Player : MonoBehaviour
     public void damage()
     {
         _lives--;
+        //Detach in case you die from moving platform
+        transform.parent = null;
         _UIManager.updateLivesDisplay(_lives);
         if (_lives == 0)
         {
