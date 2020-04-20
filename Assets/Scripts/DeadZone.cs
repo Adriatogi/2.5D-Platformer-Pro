@@ -12,11 +12,13 @@ public class DeadZone : MonoBehaviour
     private bool _isEnemyDeadZone = false;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
         _respawnPoint = GameObject.Find("Respawn_Point").transform;
         _camera = GameObject.Find("Main_Camera");
+
     }
 
     // Update is called once per frame
@@ -58,8 +60,9 @@ public class DeadZone : MonoBehaviour
     {
         //Camera stop and continue following
         vCam.enabled = false;
+        Player player = other.GetComponent<Player>();
         yield return new WaitForSeconds(1.5f);
-        
+
         if (lives != 0)
         {
             vCam.enabled = true;
@@ -73,13 +76,16 @@ public class DeadZone : MonoBehaviour
 
             //Relocate character
             other.transform.position = _respawnPoint.position;
+            player.respawn();
             yield return new WaitForSeconds(0.08f);
             cc.enabled = true;
+
         }
     }
 
     IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider other, int lives)
     {
+        Player player = other.GetComponent<Player>();
         other.gameObject.SetActive(false);
         vCam.enabled = false;
         yield return new WaitForSeconds(1.5f);
@@ -90,6 +96,7 @@ public class DeadZone : MonoBehaviour
             _damaged = false;
             other.transform.position = _respawnPoint.position;
             other.gameObject.SetActive(true);
+            player.respawn();
         }
     }
 

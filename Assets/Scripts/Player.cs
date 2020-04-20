@@ -139,4 +139,9 @@ public class Player : MonoBehaviour
     {
         return _lives;
     }
+
+    public void respawn()
+    {
+        _spriteRenderer.flipX = false;
+    }
 }
