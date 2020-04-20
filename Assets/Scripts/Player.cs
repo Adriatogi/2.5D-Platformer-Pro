@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
         _animator.SetFloat("HorizontalInput", horizontalInput);
         _animator.SetFloat("Speed", direction.sqrMagnitude);
         _animator.SetFloat("VelocityY", velocity.y);
+        _animator.SetBool("IsGrounded", _characterController.isGrounded);
         _characterController.Move(velocity * Time.deltaTime);
         
     }
