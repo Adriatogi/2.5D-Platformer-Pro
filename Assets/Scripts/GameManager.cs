@@ -7,6 +7,11 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private bool _isGameOver = false;
+    [SerializeField]
+    private bool _isMainMenu = false;
+    [SerializeField]
+    private GameObject _pausePanel;
+    private bool _isPaused = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,12 +24,49 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && _isGameOver)
         {
-            SceneManager.LoadScene("Level_1"); //Current game scene
+            restartGame();  //Current game scene
         }
+
+        if (Input.GetKeyUp(KeyCode.Escape) && (_isMainMenu == false) && (_isPaused == false))
+        {
+            _pausePanel.SetActive(true);
+            Time.timeScale = 0.0f;
+            _isPaused = true;
+        }
+        else if(Input.GetKeyUp(KeyCode.Escape) && (_isMainMenu == false) && (_isPaused == true))
+        {
+            _pausePanel.SetActive(false);
+            Time.timeScale = 1.0f;
+            _isPaused = false;
+        }
+        else if (Input.GetKeyUp(KeyCode.Escape) && (_isMainMenu == true))
+        {
+            Application.Quit();
+        }
+
     }
 
     public void gameOver()
     {
         _isGameOver = true;
     }
+
+    public void resumeGame()
+    {
+        _pausePanel.SetActive(false);
+        Time.timeScale = 1.0f;
+        _isPaused = false;
+    }
+
+    public void restartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1.0f;
+    }
+
+    public void mainMenu()
+    {
+        SceneManager.LoadScene("Main_Menu");
+    }
+
 }
