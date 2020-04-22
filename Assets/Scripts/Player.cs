@@ -76,6 +76,11 @@ public class Player : MonoBehaviour
             _spriteRenderer.flipX = false;
         }
 
+        if(Time.timeScale == 1.0f)
+        {
+            //Make player fall
+            _yVelocity -= _gravity;
+        }
 
         // Update movement
         velocity.y = _yVelocity;
@@ -107,9 +112,6 @@ public class Player : MonoBehaviour
                 _yVelocity = _jumpHeight;
                 _canDoubleJump = false;
             }
-
-            //Make player fall
-            _yVelocity -= _gravity;
         }
     }
     public void collectedCoin()
@@ -129,10 +131,6 @@ public class Player : MonoBehaviour
             _UIManager.activateRestartUI();
             _gameManager.gameOver();
         }
-    }
-    private void gameOver()
-    {
-        SceneManager.LoadScene(0);
     }
 
     public int getLives()

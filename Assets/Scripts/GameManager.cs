@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
 
+        if(_isPaused == false)
+        {
+            Time.timeScale = 1.0f;
+        }
+
     }
 
     public void gameOver()
@@ -54,19 +59,18 @@ public class GameManager : MonoBehaviour
     public void resumeGame()
     {
         _pausePanel.SetActive(false);
-        Time.timeScale = 1.0f;
         _isPaused = false;
     }
 
     public void restartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1.0f;
     }
 
     public void mainMenu()
     {
         SceneManager.LoadScene("Main_Menu");
+        _isPaused = false;
     }
 
 }
