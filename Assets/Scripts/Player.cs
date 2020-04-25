@@ -22,13 +22,20 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private GameManager _gameManager;
 
+    bool isGrounded = false;
+    [SerializeField]
+    private Transform GroundCheck1; // Put the prefab of the ground here
+    [SerializeField]
+    private LayerMask groundLayer; // Insert the layer here.
+
     [SerializeField]
     private int _lives = 3;
+
+    private Vector2 velocity;
 
     // Start is called before the first frame update
     void Start()
     {
-        _characterController = GetComponent<CharacterController>();
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -59,8 +66,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        Vector3 direction = new Vector3 (horizontalInput * _speed, 0);
-        Vector3 velocity = direction * _speed;
+        Vector2 direction = new Vector2 (horizontalInput * _speed, 0);
+        velocity = direction * _speed;
+
 
         //Changed cached _yVelocity
         jumping();
@@ -76,10 +84,12 @@ public class Player : MonoBehaviour
             _spriteRenderer.flipX = false;
         }
 
-        if(Time.timeScale == 1.0f)
+        isGrounded = Physics2D.OverlapCircle(GroundCheck1.position, 0.15f, groundLayer);
+        if (Time.timeScale == 1.0f && !isGrounded)
         {
             //Make player fall
             _yVelocity -= _gravity;
+            
         }
 
         // Update movement
@@ -87,14 +97,14 @@ public class Player : MonoBehaviour
         _animator.SetFloat("HorizontalInput", horizontalInput);
         _animator.SetFloat("Speed", direction.sqrMagnitude);
         _animator.SetFloat("VelocityY", velocity.y);
-        _animator.SetBool("IsGrounded", _characterController.isGrounded);
-        _characterController.Move(velocity * Time.deltaTime);
-        
+        _animator.SetBool("IsGrounded", isGrounded);
+        transform.Translate(velocity * Time.deltaTime);
+
     }
 
     private void jumping()
     {
-        if (_characterController.isGrounded)
+        if (isGrounded)
         {
             _yVelocity = 0;
             //Single Jump
