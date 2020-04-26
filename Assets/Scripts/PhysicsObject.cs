@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhysicsObject : MonoBehaviour
 {
     public float minGroundNormalY = .65f;
-    public float gravityModifier =1.0f;
+    public float gravityModifier =1.5f;
 
     protected bool grounded;
     protected Vector2 groundNormal;
@@ -16,6 +16,7 @@ public class PhysicsObject : MonoBehaviour
     protected RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
     protected const float shellRadius = 0.01f;
     protected List<RaycastHit2D> hitBufferList = new List<RaycastHit2D>(16);
+    protected Vector2 targetVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class PhysicsObject : MonoBehaviour
         contactFilter.useTriggers = false;
         contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
         contactFilter.useLayerMask = true;
+        groundNormal = new Vector2(0f, 1f); //assumes there's a flat ground somewhere beneath him;
     }
 
     private void OnEnable()
@@ -33,20 +35,33 @@ public class PhysicsObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        targetVelocity = Vector2.zero;
+        computeVelocity();
+    }
+
+    protected virtual void computeVelocity()
+    {
+
     }
 
     private void FixedUpdate()
     {
         velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
+        velocity.x = targetVelocity.x;
 
         grounded = false;
 
         Vector2 deltaPosition = velocity * Time.deltaTime;
 
-        Vector2 move = Vector2.up * deltaPosition.y;
+        Vector2 moveAlongGround = new Vector2(groundNormal.y, groundNormal.x);
 
-        Movement(move, true);
+        Vector2 move = moveAlongGround * deltaPosition.x;
+
+        Movement(move, false); // for X-axis
+
+        move = Vector2.up * deltaPosition.y;
+
+        Movement(move, true); // for y-axis
     }
 
     private void Movement(Vector2 move, bool yMovement)

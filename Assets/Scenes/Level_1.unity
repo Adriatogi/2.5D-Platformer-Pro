@@ -1316,10 +1316,9 @@ GameObject:
   - component: {fileID: 837981612}
   - component: {fileID: 837981611}
   - component: {fileID: 837981610}
-  - component: {fileID: 837981613}
   - component: {fileID: 837981614}
   - component: {fileID: 837981615}
-  - component: {fileID: 837981616}
+  - component: {fileID: 837981613}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1419,18 +1418,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 837981609}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71b98fab992580f45945b4d2336e6ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 2.5
-  _gravity: 1.1
-  _jumpHeight: 20
-  GroundCheck1: {fileID: 388937332}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 512
+  minGroundNormalY: 0.65
+  gravityModifier: 4
+  _speed: 5
+  _gravity: 1
+  _jumpHeight: 15
   _lives: 3
 --- !u!61 &837981614
 BoxCollider2D:
@@ -1479,20 +1476,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &837981616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837981609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c138cefe4a696e144a9a572afebd1b85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minGroundNormalY: 0.65
-  gravityModifier: 1
 --- !u!1 &900448040 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3502970429510123095, guid: a6e5a73ebc404a542a9a2f7dc5abd396,

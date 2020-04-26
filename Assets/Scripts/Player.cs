@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : PhysicsObject
 {
     private CharacterController _characterController;
 
@@ -22,19 +22,11 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private GameManager _gameManager;
 
-    bool isGrounded = false;
-    [SerializeField]
-    private Transform GroundCheck1; // Put the prefab of the ground here
-    [SerializeField]
-    private LayerMask groundLayer; // Insert the layer here.
-
     [SerializeField]
     private int _lives = 3;
 
-    private Vector2 velocity;
-
-    // Start is called before the first frame update
-    void Start()
+    //Called before start and update
+    private void Awake()
     {
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _animator = GetComponent<Animator>();
@@ -53,25 +45,25 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("UIManager is null");
         }
-        if(_gameManager == null)
+        if (_gameManager == null)
         {
             Debug.LogError("GameManager is null");
         }
-
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
         _UIManager.updateCoinsDisplay(_collectedCoins);
         _UIManager.updateLivesDisplay(_lives);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void computeVelocity()
     {
+
+        Vector2 move = Vector2.zero;
+
         float horizontalInput = Input.GetAxis("Horizontal");
-        Vector2 direction = new Vector2 (horizontalInput * _speed, 0);
-        velocity = direction * _speed;
-
-
-        //Changed cached _yVelocity
-        jumping();
+        move.x = horizontalInput;
 
         //Flipping Character
 
@@ -84,33 +76,28 @@ public class Player : MonoBehaviour
             _spriteRenderer.flipX = false;
         }
 
-        isGrounded = Physics2D.OverlapCircle(GroundCheck1.position, 0.15f, groundLayer);
-        if (Time.timeScale == 1.0f && !isGrounded)
-        {
-            //Make player fall
-            _yVelocity -= _gravity;
-            
-        }
+        jumping();
 
         // Update movement
-        velocity.y = _yVelocity;
+        //velocity.y = _yVelocity;
         _animator.SetFloat("HorizontalInput", horizontalInput);
-        _animator.SetFloat("Speed", direction.sqrMagnitude);
+        _animator.SetFloat("Speed", move.sqrMagnitude);
         _animator.SetFloat("VelocityY", velocity.y);
-        _animator.SetBool("IsGrounded", isGrounded);
-        transform.Translate(velocity * Time.deltaTime);
+        _animator.SetBool("IsGrounded", grounded);
 
+        targetVelocity = move * _speed;
     }
-
     private void jumping()
     {
-        if (isGrounded)
+        if (grounded)
         {
-            _yVelocity = 0;
+            //velocity.y = 0;
             //Single Jump
             if (Input.GetKey(KeyCode.Space))
             {
-                _yVelocity = _jumpHeight;
+                velocity.y = _jumpHeight;
+                groundNormal.y = 1;
+                groundNormal.x = 0;
                 _canDoubleJump = true;
             }
         }
@@ -119,7 +106,9 @@ public class Player : MonoBehaviour
             //Double Jump
             if (Input.GetKeyDown(KeyCode.Space) && _canDoubleJump)
             {
-                _yVelocity = _jumpHeight;
+                velocity.y = _jumpHeight;
+                groundNormal.y = 1;
+                groundNormal.x = 0;
                 _canDoubleJump = false;
             }
         }
