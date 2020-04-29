@@ -18,18 +18,17 @@ public class PhysicsObject : MonoBehaviour
     protected List<RaycastHit2D> hitBufferList = new List<RaycastHit2D>(16);
     protected Vector2 targetVelocity;
 
-    // Start is called before the first frame update
+    void OnEnable()
+    {
+        rb2d = GetComponent<Rigidbody2D>();
+    }
+
     void Start()
     {
         contactFilter.useTriggers = false;
         contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
         contactFilter.useLayerMask = true;
         groundNormal = new Vector2(0f, 1f); //assumes there's a flat ground somewhere beneath him;
-    }
-
-    private void OnEnable()
-    {
-        rb2d = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -53,7 +52,7 @@ public class PhysicsObject : MonoBehaviour
 
         Vector2 deltaPosition = velocity * Time.deltaTime;
 
-        Vector2 moveAlongGround = new Vector2(groundNormal.y, groundNormal.x);
+        Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
 
         Vector2 move = moveAlongGround * deltaPosition.x;
 
@@ -70,7 +69,7 @@ public class PhysicsObject : MonoBehaviour
 
         if (distance > minMoveDistance)
         {
-            int count = rb2d.Cast(move, contactFilter, hitBuffer, shellRadius);
+            int count = rb2d.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
             hitBufferList.Clear();
 
             for (int i= 0; i < count; i++)
