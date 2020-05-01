@@ -27,15 +27,12 @@ public class DeadZone : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
-            CinemachineBrain _vCam= _camera.GetComponent<CinemachineBrain>();
-
-            //Character would move too fast for staying in new position (The Velocity)
-            CharacterController cc = other.GetComponent<CharacterController>();
+            CinemachineBrain _vCam= _camera.GetComponent<CinemachineBrain>(); 
 
             if (player != null && _damaged != true)
             {
@@ -47,7 +44,7 @@ public class DeadZone : MonoBehaviour
             int playerLives = player.getLives();
             if (_isEnemyDeadZone == false)
             {
-                StartCoroutine(fallPlayerRespawn(_vCam, other, cc, playerLives));
+                StartCoroutine(fallPlayerRespawn(_vCam, other, playerLives));
             }
             else
             {
@@ -56,7 +53,7 @@ public class DeadZone : MonoBehaviour
         }
     }
 
-    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, Collider other, CharacterController cc, int lives)
+    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, Collider2D other, int lives)
     {
         //Camera stop and continue following
         vCam.enabled = false;
@@ -69,21 +66,21 @@ public class DeadZone : MonoBehaviour
 
             _damaged = false;
             //Disable to reset speed
-            if (cc != null)
-            {
-                cc.enabled = false;
-            }
+            //if (cc != null)
+            //{
+               // cc.enabled = false;
+            //}
 
             //Relocate character
             other.transform.position = _respawnPoint.position;
             player.respawn();
             yield return new WaitForSeconds(0.08f);
-            cc.enabled = true;
+            //cc.enabled = true;
 
         }
     }
 
-    IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider other, int lives)
+    IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider2D other, int lives)
     {
         Player player = other.GetComponent<Player>();
         other.gameObject.SetActive(false);
