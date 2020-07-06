@@ -11,12 +11,13 @@ public class DeadZone : MonoBehaviour
     private bool _damaged = false;
     private bool _isEnemyDeadZone = false;
 
-
+    private CinemachineVirtualCamera _CMCamera;
 
     // Start is called before the first frame update
     void Start()
     {
         _respawnPoint = GameObject.Find("Respawn_Point").transform;
+        _CMCamera = GameObject.Find("CM_Camera").GetComponent<CinemachineVirtualCamera>();
         _camera = GameObject.Find("Main_Camera");
 
     }
@@ -68,13 +69,16 @@ public class DeadZone : MonoBehaviour
             //Disable to reset speed
             //if (cc != null)
             //{
-               // cc.enabled = false;
+            // cc.enabled = false;
             //}
 
             //Relocate character
+            _CMCamera.enabled = false;
+
             other.transform.position = _respawnPoint.position;
             player.respawn();
             yield return new WaitForSeconds(0.08f);
+            _CMCamera.enabled = true;
             //cc.enabled = true;
 
         }
