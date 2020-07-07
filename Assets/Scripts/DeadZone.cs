@@ -77,7 +77,7 @@ public class DeadZone : MonoBehaviour
 
             other.transform.position = _respawnPoint.position;
             player.respawn();
-            yield return new WaitForSeconds(0.08f);
+            //yield return new WaitForSeconds(Mathf.Epsilon);
             _CMCamera.enabled = true;
             //cc.enabled = true;
 
