@@ -8,6 +8,8 @@ public class MovingPlatform : MonoBehaviour
     private Transform _targetA, _targetB;
     [SerializeField]
     private float _speed = 1.0f;
+    private Vector3 offset;
+    private GameObject target = null;
 
     private bool _switchingDirection = false;
 
@@ -22,11 +24,11 @@ public class MovingPlatform : MonoBehaviour
     {
         if(_switchingDirection == false)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _targetB.position, Time.deltaTime * _speed);
+            transform.position = Vector2.MoveTowards(transform.position, _targetB.position, Time.deltaTime * _speed);
         }
         else if (_switchingDirection == true)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _targetA.position, Time.deltaTime * _speed);
+            transform.position = Vector2.MoveTowards(transform.position, _targetA.position, Time.deltaTime * _speed);
         }
 
         if (transform.position == _targetA.position)
@@ -38,20 +40,26 @@ public class MovingPlatform : MonoBehaviour
             _switchingDirection = true;
         }
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
             other.transform.parent = this.transform;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnCollisionExit2D(Collision2D other)
     {
-        if(other.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
             other.transform.parent = null;
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(_targetA.position, _targetB.position);
+    }
 }
