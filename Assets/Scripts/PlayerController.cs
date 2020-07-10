@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
         contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
         contactFilter.useLayerMask = true;
 
-        //groundNormal = new Vector2(0f, 1f); //assumes there's a flat ground somewhere beneath him;
+        groundNormal = new Vector2(0f, 1f); //assumes there's a flat ground somewhere beneath him;
 
     }
 
@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
         Vector2 move = moveAlongGround * deltaPosition.x;
 
         Movement(move, false); // for X-axis
+        Debug.Log(move);
 
         move = Vector2.up * deltaPosition.y;
 

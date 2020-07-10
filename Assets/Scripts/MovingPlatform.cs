@@ -8,8 +8,6 @@ public class MovingPlatform : MonoBehaviour
     private Transform _targetA, _targetB;
     [SerializeField]
     private float _speed = 1.0f;
-    private Vector3 offset;
-    private GameObject target = null;
 
     private bool _switchingDirection = false;
 
@@ -41,7 +39,7 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
@@ -49,7 +47,7 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {

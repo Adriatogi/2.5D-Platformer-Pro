@@ -66,6 +66,6 @@ public class Player : MonoBehaviour
 
     public void respawn() //TODO Refactor code to do this with direction
     {
-       // _spriteRenderer.flipX = false;
+        // _spriteRenderer.flipX = false;
     }
 }
