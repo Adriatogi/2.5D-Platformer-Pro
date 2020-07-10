@@ -28,6 +28,12 @@ public class PlayerMove : MonoBehaviour
     private bool _canDoubleJump = false;
     private Animator _animator;
 
+    private float direction = 1;
+    private float moveInput;
+
+    private bool jump;
+    private bool doubleJump;
+
     /// <summary>
     /// Set to true when the character intersects a collider beneath
     /// them in the previous frame.
@@ -43,7 +49,17 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         // Use GetAxisRaw to ensure our input is either 0, 1 or -1.
-        float moveInput = Input.GetAxisRaw("Horizontal");
+        moveInput = Input.GetAxis("Horizontal");
+
+        if (moveInput > Mathf.Epsilon)
+        {
+            direction = 1;
+        }
+        else if (moveInput < -Mathf.Epsilon)
+        {
+            direction = -1;
+        }
+
 
         #region Jumping 
 
@@ -53,21 +69,41 @@ public class PlayerMove : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
-                // Calculate the velocity required to achieve the target jump height.
-                velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
-                _canDoubleJump = true;
+                jump = true;
             }
         }
         else
         {
             //Double Jump
-            if (Input.GetKeyDown(KeyCode.Space) && _canDoubleJump)
+            if (Input.GetButtonDown("Jump") && _canDoubleJump)
             {
-                velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
-                _canDoubleJump = false;
+                doubleJump = true;
             }
         }
         #endregion
+
+        _animator.SetFloat("Look X", direction);
+        _animator.SetFloat("HorizontalInput", moveInput);
+        _animator.SetFloat("Speed", velocity.sqrMagnitude);
+        _animator.SetFloat("VelocityY", velocity.y);
+        _animator.SetBool("IsGrounded", grounded);
+    }
+
+    private void FixedUpdate()
+    {
+        if (jump)
+        {
+            // Calculate the velocity required to achieve the target jump height.
+            velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
+            _canDoubleJump = true;
+            jump = false;
+        }
+        else if (doubleJump)
+        {
+            velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
+            _canDoubleJump = false;
+            doubleJump = false;
+        }
 
         float acceleration = grounded ? walkAcceleration : airAcceleration;
         float deceleration = grounded ? groundDeceleration : 0;
@@ -111,15 +147,10 @@ public class PlayerMove : MonoBehaviour
                 if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && velocity.y < 0)
                 {
                     grounded = true;
+                    velocity.y = 0;
                 }
             }
         }
         #endregion
-
-
-        _animator.SetFloat("HorizontalInput", moveInput);
-        _animator.SetFloat("Speed", velocity.x);
-        _animator.SetFloat("VelocityY", velocity.y);
-        _animator.SetBool("IsGrounded", grounded);
     }
 }

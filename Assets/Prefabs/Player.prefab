@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5393524318258336683}
   - component: {fileID: 4757076860003782607}
   - component: {fileID: 1444597650}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ MonoBehaviour:
   airAcceleration: 15
   groundDeceleration: 100
   jumpHeight: 6.5
-  gravityModifier: 2
+  gravityModifier: 3
 --- !u!1 &5393524318772932725
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5393524318772932722}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
