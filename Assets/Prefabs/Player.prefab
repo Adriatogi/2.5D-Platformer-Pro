@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5393524318258336681}
   - component: {fileID: 5393524318258336683}
   - component: {fileID: 4757076860003782607}
+  - component: {fileID: 1444597650}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -143,7 +144,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 5393524318258336687}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5393524318258336687}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8487a30801ad5fd429305286c1dbf12e, type: 3}
   m_Name: 
@@ -183,6 +184,24 @@ MonoBehaviour:
   _speed: 5
   gravityModifier: 3.5
   minGroundNormalY: 0.65
+--- !u!114 &1444597650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5393524318258336687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 916120dfc9cecc145a818e913318a6ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  walkAcceleration: 75
+  airAcceleration: 15
+  groundDeceleration: 100
+  jumpHeight: 6.5
+  gravityModifier: 2
 --- !u!1 &5393524318772932725
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,6 +26,7 @@ public class PlayerMove : MonoBehaviour
     protected Vector2 velocity;
 
     private bool _canDoubleJump = false;
+    private Animator _animator;
 
     /// <summary>
     /// Set to true when the character intersects a collider beneath
@@ -36,12 +37,15 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
         // Use GetAxisRaw to ensure our input is either 0, 1 or -1.
         float moveInput = Input.GetAxisRaw("Horizontal");
+
+        #region Jumping 
 
         if (grounded)
         {
@@ -63,6 +67,8 @@ public class PlayerMove : MonoBehaviour
                 _canDoubleJump = false;
             }
         }
+        #endregion
+
         float acceleration = grounded ? walkAcceleration : airAcceleration;
         float deceleration = grounded ? groundDeceleration : 0;
 
@@ -78,6 +84,8 @@ public class PlayerMove : MonoBehaviour
         velocity.y += Physics2D.gravity.y * gravityModifier * Time.deltaTime;
 
         transform.Translate(velocity * Time.deltaTime);
+
+        #region grounded and collisions
 
         grounded = false;
 
@@ -106,5 +114,12 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
+        #endregion
+
+
+        _animator.SetFloat("HorizontalInput", moveInput);
+        _animator.SetFloat("Speed", velocity.x);
+        _animator.SetFloat("VelocityY", velocity.y);
+        _animator.SetBool("IsGrounded", grounded);
     }
 }

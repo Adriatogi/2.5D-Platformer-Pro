@@ -5,12 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private float _yVelocity;
-
-
     private int _collectedCoins = 0;
     private UIManager _UIManager;
-
     private GameManager _gameManager;
 
     [SerializeField]
@@ -20,8 +16,6 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-    
-
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
         if (_UIManager == null)
