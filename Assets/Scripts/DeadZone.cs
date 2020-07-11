@@ -76,7 +76,7 @@ public class DeadZone : MonoBehaviour
             _CMCamera.enabled = false;
 
             other.transform.position = _respawnPoint.position;
-            player.respawn();
+            player.Respawn();
             //yield return new WaitForSeconds(Mathf.Epsilon);
             _CMCamera.enabled = true;
             //cc.enabled = true;
@@ -95,9 +95,16 @@ public class DeadZone : MonoBehaviour
         {
             vCam.enabled = true;
             _damaged = false;
+
+            //Relocate character
+            _CMCamera.enabled = false;
+
             other.transform.position = _respawnPoint.position;
+
             other.gameObject.SetActive(true);
-            player.respawn();
+            player.Respawn();
+
+            _CMCamera.enabled = true;
         }
     }
 

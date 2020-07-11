@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private int _collectedCoins = 0;
     private UIManager _UIManager;
     private GameManager _gameManager;
+    private PlayerController _playerController;
 
     [SerializeField]
     private int _lives = 3;
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     {
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _playerController = transform.GetComponent<PlayerController>();
 
         if (_UIManager == null)
         {
@@ -25,6 +27,10 @@ public class Player : MonoBehaviour
         if (_gameManager == null)
         {
             Debug.LogError("GameManager is null");
+        }
+        if(_playerController == null)
+        {
+            Debug.LogError("PlayerController is null");
         }
     }
     // Start is called before the first frame update
@@ -58,8 +64,8 @@ public class Player : MonoBehaviour
         return _lives;
     }
 
-    public void respawn() //TODO Refactor code to do this with direction
+    public void Respawn()
     {
-        // _spriteRenderer.flipX = false;
+        _playerController.setRespawn(0, 0);
     }
 }

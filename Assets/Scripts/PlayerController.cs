@@ -1,167 +1,162 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class PlayerController : MonoBehaviour
 {
-    private SpriteRenderer _spriteRenderer;
-    private Animator _animator;
-    private Rigidbody2D rb2d;
-    private ContactFilter2D contactFilter;
-    private bool grounded;
+    [SerializeField, Tooltip("Max speed, in units per second, that the character moves.")]
+    float speed = 5;
+
+    [SerializeField, Tooltip("Acceleration while grounded.")]
+    float walkAcceleration = 75;
+
+    [SerializeField, Tooltip("Acceleration while in the air.")]
+    float airAcceleration = 15;
+
+    [SerializeField, Tooltip("Deceleration applied when character is grounded and not attempting to move.")]
+    float groundDeceleration = 100;
+
+    [SerializeField, Tooltip("Max height the character will jump regardless of gravity")]
+    float jumpHeight = 4;
+
+    [SerializeField]
+    private float gravityModifier = 2;
+
+    private BoxCollider2D boxCollider;
+
+    public Vector2 velocity;
+
     private bool _canDoubleJump = false;
-    private Vector2 velocity;
-    [SerializeField] private float _jumpHeight = 15.0f;
-    [SerializeField] private float _speed = 5.0f;
-    private const float shellRadius = 0.01f;
-    private RaycastHit2D[] hitBuffer = new RaycastHit2D[16];
+    private Animator _animator;
 
+    private float direction = 1;
+    private float moveInput;
 
-    [SerializeField] private float gravityModifier = 3.5f;
-    private List<RaycastHit2D> hitBufferList = new List<RaycastHit2D>(16);
-    private Vector2 targetVelocity;
-    private const float minMoveDistance = 0.001f;
-    private Vector2 groundNormal;
-    [SerializeField] private float minGroundNormalY = .65f;
+    private bool jump;
+    private bool doubleJump;
 
-
+    /// <summary>
+    /// Set to true when the character intersects a collider beneath
+    /// them in the previous frame.
+    /// </summary>
+    private bool grounded;
 
     private void Awake()
     {
+        boxCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        rb2d = GetComponent<Rigidbody2D>();
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        contactFilter.useTriggers = false;
-        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
-        contactFilter.useLayerMask = true;
-
-        groundNormal = new Vector2(0f, 1f); //assumes there's a flat ground somewhere beneath him;
-
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        targetVelocity = Vector2.zero;
-        Vector2 move = Vector2.zero;
+        // Use GetAxisRaw to ensure our input is either 0, 1 or -1.
+        moveInput = Input.GetAxis("Horizontal");
 
-        float horizontalInput = Input.GetAxis("Horizontal");
-        move.x = horizontalInput;
-
-        //Flipping Character
-
-        if (horizontalInput < 0)
+        if (moveInput > Mathf.Epsilon)
         {
-            _spriteRenderer.flipX = true;
+            direction = 1;
         }
-        else if (horizontalInput > 0)
+        else if (moveInput < -Mathf.Epsilon)
         {
-            _spriteRenderer.flipX = false;
+            direction = -1;
         }
 
-        jumping();
 
-        _animator.SetFloat("HorizontalInput", horizontalInput);
-        _animator.SetFloat("Speed", move.sqrMagnitude);
-        _animator.SetFloat("VelocityY", velocity.y);
-        _animator.SetBool("IsGrounded", grounded);
+        #region Jumping 
 
-        targetVelocity = move * _speed;
-    }
-
-    private void FixedUpdate()
-    {
-        velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
-        velocity.x = targetVelocity.x;
-
-        grounded = false;
-
-        Vector2 deltaPosition = velocity * Time.deltaTime;
-
-        Vector2 moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
-
-        Vector2 move = moveAlongGround * deltaPosition.x;
-
-        Movement(move, false); // for X-axis
-        Debug.Log(move);
-
-        move = Vector2.up * deltaPosition.y;
-
-        Movement(move, true); // for y-axis
-    }
-
-    private void jumping()
-    {
         if (grounded)
         {
-            //velocity.y = 0;
-            //Single Jump
-            if (Input.GetKey(KeyCode.Space))
+            velocity.y = 0;
+
+            if (Input.GetButtonDown("Jump"))
             {
-                velocity.y = _jumpHeight;
-                groundNormal.y = 1;
-                groundNormal.x = 0;
-                _canDoubleJump = true;
+                jump = true;
             }
         }
         else
         {
             //Double Jump
-            if (Input.GetKeyDown(KeyCode.Space) && _canDoubleJump)
+            if (Input.GetButtonDown("Jump") && _canDoubleJump)
             {
-                velocity.y = _jumpHeight;
-                groundNormal.y = 1;
-                groundNormal.x = 0;
-                _canDoubleJump = false;
+                doubleJump = true;
             }
         }
+        #endregion
+
+        _animator.SetFloat("Look X", direction);
+        _animator.SetFloat("HorizontalInput", moveInput);
+        _animator.SetFloat("Speed", velocity.sqrMagnitude);
+        _animator.SetFloat("VelocityY", velocity.y);
+        _animator.SetBool("IsGrounded", grounded);
     }
 
-    private void Movement(Vector2 move, bool yMovement)
+    private void FixedUpdate()
     {
-        float distance = move.magnitude;
-
-        if (distance > minMoveDistance)
+        if (jump)
         {
-            int count = rb2d.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
-            hitBufferList.Clear();
+            // Calculate the velocity required to achieve the target jump height.
+            velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
+            _canDoubleJump = true;
+            jump = false;
+        }
+        else if (doubleJump)
+        {
+            velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
+            _canDoubleJump = false;
+            doubleJump = false;
+        }
 
-            for (int i = 0; i < count; i++)
+        float acceleration = grounded ? walkAcceleration : airAcceleration;
+        float deceleration = grounded ? groundDeceleration : 0;
+
+        if (moveInput != 0)
+        {
+            velocity.x = Mathf.MoveTowards(velocity.x, speed * moveInput, acceleration * Time.deltaTime);
+        }
+        else
+        {
+            velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.deltaTime);
+        }
+
+        velocity.y += Physics2D.gravity.y * gravityModifier * Time.deltaTime;
+
+        transform.Translate(velocity * Time.deltaTime);
+
+        #region grounded and collisions
+
+        grounded = false;
+
+        // Retrieve all colliders we have intersected after velocity has been applied.
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, boxCollider.size, 0);
+
+        foreach (Collider2D hit in hits)
+        {
+            // Ignore our own collider.
+            if (hit == boxCollider)
+                continue;
+
+            ColliderDistance2D colliderDistance = hit.Distance(boxCollider);
+
+            // Ensure that we are still overlapping this collider.
+            // The overlap may no longer exist due to another intersected collider
+            // pushing us out of this one.
+            if (colliderDistance.isOverlapped)
             {
-                hitBufferList.Add(hitBuffer[i]);
-            }
+                transform.Translate(colliderDistance.pointA - colliderDistance.pointB);
 
-            for (int i = 0; i < hitBufferList.Count; i++)
-            {
-                Vector2 currentNormal = hitBufferList[i].normal;
-
-                if (currentNormal.y > minGroundNormalY)
+                // If we intersect an object beneath us, set grounded to true. 
+                if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && velocity.y < 0)
                 {
                     grounded = true;
-                    if (yMovement == true)
-                    {
-                        groundNormal = currentNormal;
-                        currentNormal.x = 0;
-                    }
+                    velocity.y = 0;
                 }
-
-                float projection = Vector2.Dot(velocity, currentNormal);
-
-                if (projection < 0)
-                {
-                    velocity = velocity - projection * currentNormal;
-                }
-
-                float modifiedDistance = hitBufferList[i].distance - shellRadius;
-                distance = modifiedDistance < distance ? modifiedDistance : distance;
-
             }
         }
-        rb2d.position = rb2d.position + move.normalized * distance;
+        #endregion
     }
 
+    public void setRespawn(float x, float y)
+    {
+        velocity.x = x;
+        velocity.y = y;
+    }
 }
