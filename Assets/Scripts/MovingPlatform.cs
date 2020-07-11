@@ -7,35 +7,44 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField]
     private Transform _targetA, _targetB;
     [SerializeField]
+    private List<Transform> _wayPoints = new List<Transform>();
+    [SerializeField]
     private float _speed = 1.0f;
 
     private bool _switchingDirection = false;
 
+    int i = 0;
+    bool movingObject = false;
+    Vector3 targetPosition;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        targetPosition = _wayPoints[i].position;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(_switchingDirection == false)
+        if (transform.position != targetPosition)
         {
-            transform.position = Vector2.MoveTowards(transform.position, _targetB.position, Time.deltaTime * _speed);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, Time.deltaTime * _speed);
+            movingObject = true;
         }
-        else if (_switchingDirection == true)
+        else if (transform.position == targetPosition)
         {
-            transform.position = Vector2.MoveTowards(transform.position, _targetA.position, Time.deltaTime * _speed);
+            targetPosition = _wayPoints[i].position;
+            movingObject = false;
         }
 
-        if (transform.position == _targetA.position)
+        if (i == _wayPoints.Count)
         {
-            _switchingDirection = false;
-        } 
-        else if (transform.position == _targetB.position)
+            i = 0;
+        }
+        else if (!movingObject)
         {
-            _switchingDirection = true;
+            i++;
         }
     }
 
