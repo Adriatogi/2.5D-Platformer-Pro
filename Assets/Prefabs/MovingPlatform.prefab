@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 166896843631561983}
   - component: {fileID: 4345937877890903485}
   - component: {fileID: 3250994428950761375}
+  - component: {fileID: 2366415273079827064}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -129,12 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa9c00a3ce1d8e94ba02f49ea78d8ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetA: {fileID: 2519109216883496851}
-  _targetB: {fileID: 6399669460268278739}
-  _wayPoints:
-  - {fileID: 2519109216883496851}
-  - {fileID: 6399669460268278739}
-  _speed: 1
 --- !u!61 &4345937877890903485
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -187,6 +182,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.8753655, y: 1.1724474}
   m_EdgeRadius: 0
+--- !u!114 &2366415273079827064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151482268549024884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8b1eecd8eb1554a9028fa785b328e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wayPoints:
+  - {fileID: 6399669460268278739}
+  - {fileID: 2519109216883496851}
+  _speed: 1.5
 --- !u!1 &3502970429510123095
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,8 +225,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4.9021, y: 1, z: 1}
   m_Children:
-  - {fileID: 2519109216883496851}
   - {fileID: 6399669460268278739}
+  - {fileID: 2519109216883496851}
   - {fileID: 1622652211116548745}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -230,7 +241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2519109216883496851}
   m_Layer: 0
-  m_Name: WayPoint1
+  m_Name: WayPoint2
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -248,7 +259,7 @@ Transform:
   m_LocalScale: {x: 0.2039942, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2392374635972014321}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5241788792363458329
 GameObject:
@@ -422,7 +433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6399669460268278739}
   m_Layer: 0
-  m_Name: WayPoint2
+  m_Name: StartingPosition
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -440,5 +451,5 @@ Transform:
   m_LocalScale: {x: 0.2039942, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2392374635972014321}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

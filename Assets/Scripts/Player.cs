@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     {
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        _playerController = transform.GetComponent<PlayerController>();
+        _playerController = GetComponent<PlayerController>();
 
         if (_UIManager == null)
         {
@@ -66,6 +66,6 @@ public class Player : MonoBehaviour
 
     public void Respawn()
     {
-        _playerController.setRespawn(0, 0);
+        _playerController.setVelocity(0, 0);
     }
 }

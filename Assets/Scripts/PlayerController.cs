@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
         #endregion
     }
 
-    public void setRespawn(float x, float y)
+    public void setVelocity(float x, float y)
     {
         velocity.x = x;
         velocity.y = y;
