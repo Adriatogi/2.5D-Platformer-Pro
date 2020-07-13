@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
         if (grounded)
         {
+            _canDoubleJump = true;
             velocity.y = 0;
 
             if (Input.GetButtonDown("Jump"))
@@ -72,7 +73,7 @@ public class PlayerController : MonoBehaviour
                 jump = true;
             }
         }
-        else
+        else if(!grounded)
         {
             //Double Jump
             if (Input.GetButtonDown("Jump") && _canDoubleJump)
@@ -91,11 +92,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        #region Jumping
         if (jump)
         {
             // Calculate the velocity required to achieve the target jump height.
             velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
-            _canDoubleJump = true;
+            //_canDoubleJump = true;
             jump = false;
         }
         else if (doubleJump)
@@ -104,6 +106,7 @@ public class PlayerController : MonoBehaviour
             _canDoubleJump = false;
             doubleJump = false;
         }
+        #endregion
 
         float acceleration = grounded ? walkAcceleration : airAcceleration;
         float deceleration = grounded ? groundDeceleration : 0;
@@ -147,6 +150,11 @@ public class PlayerController : MonoBehaviour
                 if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && velocity.y < 0)
                 {
                     grounded = true;
+                    velocity.y = 0;
+                }
+
+                if (Vector2.Angle(colliderDistance.normal, Vector2.down) < 90 && velocity.y > 0)
+                {
                     velocity.y = 0;
                 }
             }

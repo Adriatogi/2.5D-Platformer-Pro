@@ -11,10 +11,4 @@ public class SpikeEnemy : MonoBehaviour
         _deadZone = GetComponent<DeadZone>();
         _deadZone._enemyDeadZone();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
