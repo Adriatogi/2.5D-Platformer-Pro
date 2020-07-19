@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
+        direction = 1;
     }
 
     private void Update()
@@ -59,7 +60,6 @@ public class PlayerController : MonoBehaviour
         {
             direction = -1;
         }
-
 
         #region Jumping 
 
@@ -166,5 +166,10 @@ public class PlayerController : MonoBehaviour
     {
         velocity.x = x;
         velocity.y = y;
+    }
+
+    public void setDirection(int directionValue)
+    {
+        direction = directionValue;
     }
 }

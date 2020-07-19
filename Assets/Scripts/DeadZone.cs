@@ -66,11 +66,6 @@ public class DeadZone : MonoBehaviour
             vCam.enabled = true;
 
             _damaged = false;
-            //Disable to reset speed
-            //if (cc != null)
-            //{
-            // cc.enabled = false;
-            //}
 
             //Relocate character
             _CMCamera.enabled = false;
@@ -87,7 +82,8 @@ public class DeadZone : MonoBehaviour
     IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, Collider2D other, int lives)
     {
         Player player = other.GetComponent<Player>();
-        other.gameObject.SetActive(false);
+        SpriteRenderer _spriteRenderer = other.GetComponent<SpriteRenderer>();
+        _spriteRenderer.enabled = false;
         vCam.enabled = false;
         yield return new WaitForSeconds(1.5f);
 
@@ -101,7 +97,7 @@ public class DeadZone : MonoBehaviour
 
             other.transform.position = _respawnPoint.position;
 
-            other.gameObject.SetActive(true);
+            _spriteRenderer.enabled = true;
             player.Respawn();
 
             _CMCamera.enabled = true;

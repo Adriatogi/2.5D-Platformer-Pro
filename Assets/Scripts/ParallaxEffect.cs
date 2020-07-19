@@ -13,7 +13,6 @@ public class ParallaxEffect : MonoBehaviour
     {
         _startPos = transform.position.x;
         _length = GetComponent<SpriteRenderer>().bounds.size.x;
-        Debug.Log(_length);
     }
     void Update()
     {

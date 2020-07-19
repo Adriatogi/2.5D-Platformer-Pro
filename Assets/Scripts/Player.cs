@@ -67,5 +67,6 @@ public class Player : MonoBehaviour
     public void Respawn()
     {
         _playerController.setVelocity(0, 0);
+        _playerController.setDirection(1);
     }
 }
