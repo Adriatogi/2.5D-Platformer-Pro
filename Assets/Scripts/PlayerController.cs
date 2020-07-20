@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float gravityModifier = 2;
 
+    [SerializeField]
     private BoxCollider2D boxCollider;
 
     public Vector2 velocity;
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool _canDoubleJump = false;
     private Animator _animator;
 
-    private float direction = 1;
+    private bool facingRight = true;
     private float moveInput;
 
     private bool jump;
@@ -42,9 +43,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        boxCollider = GetComponent<BoxCollider2D>();
+        //boxCollider = GetComponent<BoxCollider2D>();
         _animator = GetComponent<Animator>();
-        direction = 1;
     }
 
     private void Update()
@@ -52,13 +52,16 @@ public class PlayerController : MonoBehaviour
         // Use GetAxisRaw to ensure our input is either 0, 1 or -1.
         moveInput = Input.GetAxis("Horizontal");
 
-        if (moveInput > Mathf.Epsilon)
+        if (moveInput > Mathf.Epsilon && !facingRight)
         {
-            direction = 1;
+            transform.localScale = new Vector3(1, 1, 1);
+            facingRight = true;
         }
-        else if (moveInput < -Mathf.Epsilon)
+        else if (moveInput < -Mathf.Epsilon && facingRight)
         {
-            direction = -1;
+            transform.localScale = new Vector3(-1, 1, 1);
+            facingRight = false;
+
         }
 
         #region Jumping 
@@ -83,7 +86,6 @@ public class PlayerController : MonoBehaviour
         }
         #endregion
 
-        _animator.SetFloat("Look X", direction);
         _animator.SetFloat("HorizontalInput", moveInput);
         _animator.SetFloat("Speed", velocity.sqrMagnitude);
         _animator.SetFloat("VelocityY", velocity.y);
@@ -134,7 +136,7 @@ public class PlayerController : MonoBehaviour
         foreach (Collider2D hit in hits)
         {
             // Ignore our own collider.
-            if (hit == boxCollider)
+            if (hit == boxCollider || hit.isTrigger)
                 continue;
 
             ColliderDistance2D colliderDistance = hit.Distance(boxCollider);
@@ -168,8 +170,18 @@ public class PlayerController : MonoBehaviour
         velocity.y = y;
     }
 
-    public void setDirection(int directionValue)
+    public void setDirection(bool faceRight)
     {
-        direction = directionValue;
+        if (faceRight)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+            facingRight = true;
+        }
+        else if (!faceRight)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+            facingRight = false;
+
+        }
     }
 }
