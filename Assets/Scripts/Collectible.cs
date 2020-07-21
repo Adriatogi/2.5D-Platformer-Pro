@@ -9,26 +9,22 @@ public class Collectible : MonoBehaviour
     private float _floatSpeed = 2.0f;
     private Vector3 _position;
 
+    private bool _collected = false;
+
     // Start is called before the first frame update
     void Start()
     {
         _position = transform.position;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !_collected)
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
+                _collected = true;
                 player.collectedCoin();
             }
 
@@ -36,6 +32,7 @@ public class Collectible : MonoBehaviour
 
         }
     }
+
     private IEnumerator FadeOut()
     {
         Color tmp = GetComponent<SpriteRenderer>().color;
@@ -52,7 +49,6 @@ public class Collectible : MonoBehaviour
             transform.position = _position;
             if (_tmpColor.a <= 0.030f)
             {
-
                 Destroy(transform.parent.gameObject);
             }
 
