@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private bool _isGameOver = false;
+    [SerializeField]
+    private bool _levelComplete = false;
 
     // Update is called once per frame
     void Update()
@@ -27,4 +29,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void levelCompleted()
+    {
+        _levelComplete = true;
+        Debug.Log("Level Complete");
+    }
 }
