@@ -20,12 +20,12 @@ public class Door : MonoBehaviour
 
     private void OnEnable()
     {
-        Key.OnCollected += openDoor;
+        EventBroker.KeyCollected += openDoor;
     }
 
     private void OnDisable()
     {
-        Key.OnCollected -= openDoor;
+        EventBroker.KeyCollected -= openDoor;
     }
     private void openDoor()
     {

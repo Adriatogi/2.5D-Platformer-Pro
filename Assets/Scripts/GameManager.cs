@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     public void levelCompleted()
     {
+        EventBroker.CallLevelComplete();
         _levelComplete = true;
         Debug.Log("Level Complete");
     }

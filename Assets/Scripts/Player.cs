@@ -36,14 +36,14 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _UIManager.updateCoinsDisplay(_collectedCoins);
+        _UIManager.UpdateCoinsDisplay(_collectedCoins);
         _UIManager.updateLivesDisplay(_lives);
     }
     
     public void collectedCoin()
     {
         _collectedCoins++;
-        _UIManager.updateCoinsDisplay(_collectedCoins);
+        _UIManager.UpdateCoinsDisplay(_collectedCoins);
     }
 
     public void damage()

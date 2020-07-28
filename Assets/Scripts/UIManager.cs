@@ -15,11 +15,14 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject _pausePanel;
     private bool _isPaused = false;
+    [SerializeField]
+    private GameObject _winPanel;
+    private bool _isWon = false;
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && (_isMainMenu == false) && (_isPaused == false))
+        if (Input.GetKeyUp(KeyCode.Escape) && (_isMainMenu == false) && (_isPaused == false) && !_isWon)
         {
             _pausePanel.SetActive(true);
             Time.timeScale = 0.0f;
@@ -42,7 +45,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void updateCoinsDisplay(int coins)
+    public void UpdateCoinsDisplay(int coins)
     {
         _coinCountText.text = coins.ToString();
     }
@@ -68,4 +71,20 @@ public class UIManager : MonoBehaviour
         _isPaused = false;
     }
 
+    private void gameWon()
+    {
+        _winPanel.SetActive(true);
+        _isPaused = true;
+        Time.timeScale = 0.0f;
+    }
+
+    private void OnEnable()
+    {
+        EventBroker.LevelComplete += gameWon; 
+    }
+
+    private void OnDisable()
+    {
+        EventBroker.LevelComplete -= gameWon;
+    }
 }

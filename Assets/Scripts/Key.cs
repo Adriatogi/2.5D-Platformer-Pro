@@ -8,13 +8,9 @@ public class Key : MonoBehaviour
     public static event KeyAction OnCollected;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
-            if(OnCollected != null)
-            {
-                OnCollected.Invoke();
-            }
-            OnCollected?.Invoke();
+            EventBroker.CallKeyCollected();
         }
     }
 }
