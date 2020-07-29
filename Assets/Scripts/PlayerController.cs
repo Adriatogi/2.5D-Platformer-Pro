@@ -69,7 +69,6 @@ public class PlayerController : MonoBehaviour
         if (grounded)
         {
             _canDoubleJump = true;
-            velocity.y = 0;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -138,9 +137,9 @@ public class PlayerController : MonoBehaviour
             // Ignore our own collider.
             if (hit == boxCollider || hit.isTrigger)
                 continue;
-
+           
             ColliderDistance2D colliderDistance = hit.Distance(boxCollider);
-
+            
             // Ensure that we are still overlapping this collider.
             // The overlap may no longer exist due to another intersected collider
             // pushing us out of this one.
@@ -148,16 +147,28 @@ public class PlayerController : MonoBehaviour
             {
                 transform.Translate(colliderDistance.pointA - colliderDistance.pointB);
 
+                Debug.Log(Vector2.Angle(colliderDistance.normal, Vector2.up));
                 // If we intersect an object beneath us, set grounded to true. 
-                if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && velocity.y < 0)
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.up) < 88) && velocity.y < 0)
                 {
+                    Debug.Log("Botom");
                     grounded = true;
                     velocity.y = 0;
                 }
-
-                if (Vector2.Angle(colliderDistance.normal, Vector2.down) < 90 && velocity.y > 0)
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.down) < 88) && velocity.y > 0)
                 {
+                    Debug.Log("Top");
                     velocity.y = 0;
+                }
+                if((Vector2.Angle(colliderDistance.normal, Vector2.left) < 88) && velocity.x > 0)
+                {
+                    Debug.Log("Right");
+                    velocity.x = 0;
+                }
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.right) < 88) && velocity.x < 0)
+                {
+                    Debug.Log("Left");
+                    velocity.x = 0;
                 }
             }
         }
