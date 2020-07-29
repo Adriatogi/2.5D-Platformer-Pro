@@ -35,6 +35,12 @@ public class PlayerController : MonoBehaviour
     private bool jump;
     private bool doubleJump;
 
+    [SerializeField]
+    private float hangTime = 0.2f;
+    private float hangCounter;
+
+    private bool hasJumped;
+
     /// <summary>
     /// Set to true when the character intersects a collider beneath
     /// them in the previous frame.
@@ -66,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
         #region Jumping 
 
-        if (grounded)
+        if (hangCounter > 0f && !hasJumped)
         {
             _canDoubleJump = true;
 
@@ -75,13 +81,22 @@ public class PlayerController : MonoBehaviour
                 jump = true;
             }
         }
-        else if(!grounded)
+        else
         {
             //Double Jump
             if (Input.GetButtonDown("Jump") && _canDoubleJump)
             {
                 doubleJump = true;
             }
+        }
+
+        if (grounded)
+        {
+            hangCounter = hangTime;
+        }
+        else
+        {
+            hangCounter -= Time.deltaTime;
         }
         #endregion
 
@@ -100,17 +115,20 @@ public class PlayerController : MonoBehaviour
             velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
             //_canDoubleJump = true;
             jump = false;
+            hasJumped = true;
+            Debug.Log("Jump");
         }
         else if (doubleJump)
         {
             velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
             _canDoubleJump = false;
             doubleJump = false;
+            Debug.Log("DoubleJump");
         }
         #endregion
 
         float acceleration = grounded ? walkAcceleration : airAcceleration;
-        float deceleration = grounded ? groundDeceleration : 0;
+        //float deceleration = grounded ? groundDeceleration : 0;
 
         if (moveInput != 0)
         {
@@ -118,7 +136,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.deltaTime);
+            //velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.deltaTime);
+            velocity.x = 0;
         }
 
         velocity.y += Physics2D.gravity.y * gravityModifier * Time.deltaTime;
@@ -147,25 +166,26 @@ public class PlayerController : MonoBehaviour
             {
                 transform.Translate(colliderDistance.pointA - colliderDistance.pointB);
 
-                Debug.Log(Vector2.Angle(colliderDistance.normal, Vector2.up));
+
                 // If we intersect an object beneath us, set grounded to true. 
-                if ((Vector2.Angle(colliderDistance.normal, Vector2.up) < 88) && velocity.y < 0)
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.up) < 45) && velocity.y < 0)
                 {
                     Debug.Log("Botom");
                     grounded = true;
                     velocity.y = 0;
+                    hasJumped = false;
                 }
-                if ((Vector2.Angle(colliderDistance.normal, Vector2.down) < 88) && velocity.y > 0)
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.down) < 45) && velocity.y > 0)
                 {
                     Debug.Log("Top");
                     velocity.y = 0;
                 }
-                if((Vector2.Angle(colliderDistance.normal, Vector2.left) < 88) && velocity.x > 0)
+                if((Vector2.Angle(colliderDistance.normal, Vector2.left) < 45) && velocity.x > 0 && facingRight)
                 {
-                    Debug.Log("Right");
+                   Debug.Log("Right");
                     velocity.x = 0;
                 }
-                if ((Vector2.Angle(colliderDistance.normal, Vector2.right) < 88) && velocity.x < 0)
+                if ((Vector2.Angle(colliderDistance.normal, Vector2.right) < 45) && velocity.x < 0 && !facingRight)
                 {
                     Debug.Log("Left");
                     velocity.x = 0;
