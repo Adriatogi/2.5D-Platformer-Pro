@@ -9,6 +9,15 @@ public class GameManager : MonoBehaviour
     private bool _isGameOver = false;
     [SerializeField]
     private bool _levelComplete = false;
+    [SerializeField]
+    private float _fadeTime = 0.65f;
+
+    private Player _player;
+
+    private void Awake()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -31,6 +40,15 @@ public class GameManager : MonoBehaviour
 
     public void levelCompleted()
     {
+        StartCoroutine(EndLevel());
+    }
+
+    private IEnumerator EndLevel()
+    {
+        _player.FadeCharacter();
+
+        yield return new WaitForSeconds(_fadeTime);
+
         EventBroker.CallLevelComplete();
         _levelComplete = true;
         Debug.Log("Level Complete");

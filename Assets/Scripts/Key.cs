@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Key : MonoBehaviour, ICollectable
 {
-   public void Collected()
+    public void Collected()
     {
         EventBroker.CallKeyCollected();
     }

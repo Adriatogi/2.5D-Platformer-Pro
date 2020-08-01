@@ -12,12 +12,6 @@ public class Collectible : MonoBehaviour
 
     private bool _collected = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && !_collected )

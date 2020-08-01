@@ -65,15 +65,15 @@ public class Player : MonoBehaviour
             foreach (Collider2D hit in hits)
             {
                 //TODO Refactor so it only creates IInteractable if there is one
-                    Debug.Log("Hit");
-                    //Debug.DrawRay(transform.position, lookDirection, Color.red, 1.0f, false);
+                Debug.Log("Hit");
+                //Debug.DrawRay(transform.position, lookDirection, Color.red, 1.0f, false);
 
-                    IInteractable interactable = hit.GetComponent<IInteractable>();
-                    //if it isnt nul, run the interactable property of interecated 
-                    if (interactable != null)
-                    {
-                        interactable.Interact();
-                    }
+                IInteractable interactable = hit.GetComponent<IInteractable>();
+                //if it isnt nul, run the interactable property of interecated 
+                if (interactable != null)
+                {
+                    interactable.Interact();
+                }
             }
         }
     }
@@ -107,4 +107,26 @@ public class Player : MonoBehaviour
         _playerController.setVelocity(0, 0);
         _playerController.setDirection(true);
     }
+
+    public void FadeCharacter()
+    {
+        StartCoroutine(FadeOut());
+    }
+
+    private IEnumerator FadeOut()
+    {
+        Color tmp = _spriteRenderer.color;
+        float _progress = 0.0f;
+
+        while (_progress < 1)
+        {
+            Color _tmpColor = GetComponent<SpriteRenderer>().color;
+
+            GetComponent<SpriteRenderer>().color = new Color(_tmpColor.r, _tmpColor.g, _tmpColor.b, Mathf.Lerp(tmp.a, 0, _progress)); //startAlpha = 0 <-- value is in tmp.a
+            _progress += Time.deltaTime * 1.5f;
+
+            yield return null;
+        }
+    }
+
 }

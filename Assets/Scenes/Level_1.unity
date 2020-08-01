@@ -3955,6 +3955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isGameOver: 0
   _levelComplete: 0
+  _fadeTime: 0.65
 --- !u!4 &837981612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5393524318258336682, guid: abbd12c0f95d7424fa7bd294e37b5d50,
