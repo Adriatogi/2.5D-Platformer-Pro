@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Key : MonoBehaviour
+public class Key : MonoBehaviour, ICollectable
 {
-    public delegate void KeyAction();
-    public static event KeyAction OnCollected;
-    private void OnTriggerEnter2D(Collider2D collision)
+   public void Collected()
     {
-        if (collision.CompareTag("Player"))
-        {
-            EventBroker.CallKeyCollected();
-        }
+        EventBroker.CallKeyCollected();
     }
+
 }

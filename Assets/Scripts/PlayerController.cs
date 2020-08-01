@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
                 // If we intersect an object beneath us, set grounded to true. 
                 if ((Vector2.Angle(colliderDistance.normal, Vector2.up) < 45) && velocity.y < 0)
                 {
-                    Debug.Log("Botom");
+                    //Debug.Log("Botom");
                     grounded = true;
                     velocity.y = 0;
                     hasJumped = false;

@@ -6,6 +6,7 @@ public class Collectible : MonoBehaviour
 {
     [SerializeField]
     private Transform _fadeTarget;
+    [SerializeField]
     private float _floatSpeed = 2.0f;
     private Vector3 _position;
 
@@ -14,18 +15,18 @@ public class Collectible : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _position = transform.position;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && !_collected )
         {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
+            ICollectable collectable = GetComponent<ICollectable>();
+            if (collectable != null)
             {
+                collectable.Collected();
                 _collected = true;
-                player.collectedCoin();
             }
 
             StartCoroutine(FadeOut());
@@ -37,6 +38,7 @@ public class Collectible : MonoBehaviour
     {
         Color tmp = GetComponent<SpriteRenderer>().color;
         float _progress = 0.0f;
+        _position = transform.position;
 
         while (_progress < 1)
         {

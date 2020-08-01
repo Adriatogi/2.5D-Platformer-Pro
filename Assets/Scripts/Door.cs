@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IInteractable
 {
     [SerializeField]
     private Sprite _doorClose;
@@ -33,7 +33,7 @@ public class Door : MonoBehaviour
         isKeyCollected = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void Interact()
     {
         if (isKeyCollected)
         {

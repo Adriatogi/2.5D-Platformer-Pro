@@ -10,10 +10,20 @@ public class Player : MonoBehaviour
     private GameManager _gameManager;
     private PlayerController _playerController;
     private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
 
     [SerializeField]
     private int _lives = 3;
 
+    private void OnEnable()
+    {
+        EventBroker.CoinCollected += collectedCoin;
+    }
+
+    private void OnDisable()
+    {
+        EventBroker.CoinCollected -= collectedCoin;
+    }
     //Called before start and update
     private void Awake()
     {
@@ -21,6 +31,7 @@ public class Player : MonoBehaviour
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _playerController = GetComponent<PlayerController>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (_UIManager == null)
         {
@@ -34,6 +45,8 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("PlayerController is null");
         }
+
+
     }
     // Start is called before the first frame update
     void Start()
@@ -46,29 +59,21 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Vector2 lookDirection = new Vector2(-1, 0);
+            //RaycastHit2D hit = Physics2D.Raycast(_rigidbody2D.position + Vector2.up * 0.2f, lookDirection, 0.5f, LayerMask.GetMask("Default"));
+            Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, _spriteRenderer.bounds.size, 0);
 
-            if (_playerController.IsRight()) {
-                lookDirection = new Vector2(1, 0);
-            }
-
-            RaycastHit2D hit = Physics2D.Raycast(_rigidbody2D.position + Vector2.up * 0.2f, lookDirection, 0.5f, LayerMask.GetMask("Default"));
-
-            if (hit.collider != null)
+            foreach (Collider2D hit in hits)
             {
-                Debug.Log("Hit");
-                Debug.DrawRay(transform.position, lookDirection, Color.red, 1.0f, false);
+                //TODO Refactor so it only creates IInteractable if there is one
+                    Debug.Log("Hit");
+                    //Debug.DrawRay(transform.position, lookDirection, Color.red, 1.0f, false);
 
-                //Make an interface for interactable
-                //Get component interactable
-                //if it isnt nul, run the interactable property of interecated 
-
-                //NonPlayerCharacter character = hit.collider.GetComponent<NonPlayerCharacter>();
-
-                //if (character != null)
-                //{
-                //    character.DisplayDialog();
-                //}
+                    IInteractable interactable = hit.GetComponent<IInteractable>();
+                    //if it isnt nul, run the interactable property of interecated 
+                    if (interactable != null)
+                    {
+                        interactable.Interact();
+                    }
             }
         }
     }
