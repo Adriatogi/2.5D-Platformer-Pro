@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class Player : MonoBehaviour
 {
@@ -9,28 +10,40 @@ public class Player : MonoBehaviour
     private UIManager _UIManager;
     private GameManager _gameManager;
     private PlayerController _playerController;
-    private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
+    private CinemachineVirtualCamera _CMCamera;
+    private Camera _camera;
+    private CinemachineBrain _vCam;
 
     [SerializeField]
     private int _lives = 3;
+    [SerializeField]
+    private Transform _respawnPoint;
+    [SerializeField]
+    private Transform _keyRespawnPoint;
+    private bool _damaged = false;
+
 
     private void OnEnable()
     {
         EventBroker.CoinCollected += collectedCoin;
+        EventBroker.KeyCollected += ChangeSpawn;
     }
 
     private void OnDisable()
     {
         EventBroker.CoinCollected -= collectedCoin;
+        EventBroker.KeyCollected -= ChangeSpawn;
     }
     //Called before start and update
     private void Awake()
     {
+        _camera = Camera.main;
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _CMCamera = GameObject.Find("CM_Camera").GetComponent<CinemachineVirtualCamera>();
+        _vCam = _camera.GetComponent<CinemachineBrain>();
         _playerController = GetComponent<PlayerController>();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (_UIManager == null)
@@ -78,13 +91,39 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("DeadZone"))
+        {
+            if (!_damaged)
+            {
+                damage();
+                _damaged = true;
+
+            }
+
+            StartCoroutine(fallPlayerRespawn(_vCam, _lives));
+        }
+        else if(collision.CompareTag("Enemy"))
+        {
+            if (!_damaged)
+            {
+                damage();
+                _damaged = true;
+
+            }
+
+            StartCoroutine(enemyPlayerRespawn(_vCam, _lives));
+        }
+    }
+
     public void collectedCoin()
     {
         _collectedCoins++;
         _UIManager.UpdateCoinsDisplay(_collectedCoins);
     }
 
-    public void damage()
+    private void damage()
     {
         _lives--;
         //Detach in case you die from moving platform
@@ -97,12 +136,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public int getLives()
-    {
-        return _lives;
-    }
-
-    public void Respawn()
+    private void Respawn()
     {
         _playerController.setVelocity(0, 0);
         _playerController.setDirection(true);
@@ -111,6 +145,11 @@ public class Player : MonoBehaviour
     public void FadeCharacter()
     {
         StartCoroutine(FadeOut());
+    }
+
+    public void ChangeSpawn()
+    {
+        _respawnPoint = _keyRespawnPoint;
     }
 
     private IEnumerator FadeOut()
@@ -129,4 +168,54 @@ public class Player : MonoBehaviour
         }
     }
 
+    #region Respawn IEnumerators
+    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, int lives)
+    {
+        //Camera stop and continue following
+        vCam.enabled = false;
+        yield return new WaitForSeconds(1.5f);
+
+        if (lives != 0)
+        {
+            vCam.enabled = true;
+
+            _damaged = false;
+
+            //Relocate character
+            _CMCamera.enabled = false;
+
+            transform.position = _respawnPoint.position;
+            Respawn();
+            //yield return new WaitForSeconds(Mathf.Epsilon);
+            _CMCamera.enabled = true;
+            //cc.enabled = true;
+
+        }
+    }
+
+    IEnumerator enemyPlayerRespawn(CinemachineBrain vCam, int lives)
+    {
+        //Player player = other.GetComponent<Player>();
+        //SpriteRenderer _spriteRenderer = other.GetComponent<SpriteRenderer>();
+        _spriteRenderer.enabled = false;
+        vCam.enabled = false;
+        yield return new WaitForSeconds(1.5f);
+
+        if (lives != 0)
+        {
+            vCam.enabled = true;
+            _damaged = false;
+
+            //Relocate character
+            _CMCamera.enabled = false;
+
+            transform.position = _respawnPoint.position;
+
+            _spriteRenderer.enabled = true;
+            Respawn();
+
+            _CMCamera.enabled = true;
+        }
+    }
+    #endregion
 }

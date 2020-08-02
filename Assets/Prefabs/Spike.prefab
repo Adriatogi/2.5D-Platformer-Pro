@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3800467599884721061}
   - component: {fileID: 5790597629505391994}
-  - component: {fileID: 1335628648915212768}
   - component: {fileID: 4122584085219533144}
-  - component: {fileID: 590137131147595627}
   m_Layer: 0
   m_Name: Spike
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,19 +82,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1335628648915212768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276016205447516493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1a9aa4f8bc5fc84c9f04a3b286ebee1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _respawnPoint: {fileID: 0}
 --- !u!60 &4122584085219533144
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -125,15 +110,3 @@ PolygonCollider2D:
     - - {x: -0.45714286, y: 0.45714286}
       - {x: -0.45714286, y: -0.45714286}
       - {x: 0.4095766, y: 0.0013811886}
---- !u!114 &590137131147595627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276016205447516493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48c3ac2ae7ac2764baa780f131b837dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

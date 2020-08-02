@@ -8,20 +8,13 @@ public class BlockEnemy : MonoBehaviour
     private Transform _floatTargetA, _floatTargetB;
     private bool _switchingDirectionY = false;
     [SerializeField]
-    private float _speed = 3;
-    [SerializeField]
     private float _floatSpeed = 10;
     private Vector3 _position;
-    private DeadZone _deadZone;
-
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _position = transform.position;
-        _deadZone = GetComponent<DeadZone>();
-        _deadZone._enemyDeadZone();
-
     }
 
     // Update is called once per frame

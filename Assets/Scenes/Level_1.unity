@@ -1501,11 +1501,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 264169153}
-  - component: {fileID: 264169152}
   - component: {fileID: 264169150}
   m_Layer: 0
   m_Name: Dead_Zone
-  m_TagString: Untagged
+  m_TagString: DeadZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1536,19 +1535,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &264169152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 264169149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1a9aa4f8bc5fc84c9f04a3b286ebee1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _respawnPoint: {fileID: 0}
 --- !u!4 &264169153
 Transform:
   m_ObjectHideFlags: 0
@@ -1991,6 +1977,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &385867188 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 809342185444697813, guid: d18b4681d80b4fa46b245dd255062e58,
+    type: 3}
+  m_PrefabInstance: {fileID: 8735275847779837419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &388451448
 GameObject:
   m_ObjectHideFlags: 0
@@ -7908,12 +7900,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5393524318258336683, guid: abbd12c0f95d7424fa7bd294e37b5d50,
+        type: 3}
+      propertyPath: _respawnPoint
+      value: 
+      objectReference: {fileID: 932170047}
+    - target: {fileID: 5393524318258336683, guid: abbd12c0f95d7424fa7bd294e37b5d50,
+        type: 3}
+      propertyPath: _keyRespawnPoint
+      value: 
+      objectReference: {fileID: 385867188}
     - target: {fileID: 5393524318258336687, guid: abbd12c0f95d7424fa7bd294e37b5d50,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1444597650, guid: abbd12c0f95d7424fa7bd294e37b5d50, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: abbd12c0f95d7424fa7bd294e37b5d50, type: 3}
 --- !u!1001 &5683038537161798624
 PrefabInstance:
@@ -7926,6 +7929,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spike_Enemy_Sideways
+      objectReference: {fileID: 0}
+    - target: {fileID: 285766363977394458, guid: 7a85ab944ed7ce04faedf4622a73efd7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2519764733921906949, guid: 7a85ab944ed7ce04faedf4622a73efd7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6052224797455208483, guid: 7a85ab944ed7ce04faedf4622a73efd7,
         type: 3}
@@ -7982,7 +7995,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2045095253012161221, guid: 7a85ab944ed7ce04faedf4622a73efd7, type: 3}
+    - {fileID: 285766363977394458, guid: 7a85ab944ed7ce04faedf4622a73efd7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7a85ab944ed7ce04faedf4622a73efd7, type: 3}
 --- !u!1001 &6504969273922421129
 PrefabInstance:
@@ -8132,7 +8147,7 @@ PrefabInstance:
     - target: {fileID: 8735275848554155891, guid: d18b4681d80b4fa46b245dd255062e58,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.396593
+      value: -6.55
       objectReference: {fileID: 0}
     - target: {fileID: 8735275848554155891, guid: d18b4681d80b4fa46b245dd255062e58,
         type: 3}
