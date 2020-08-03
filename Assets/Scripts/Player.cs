@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private GameManager _gameManager;
     private PlayerController _playerController;
     private SpriteRenderer _spriteRenderer;
+    private LevelLoader _levelLoader;
     private CinemachineVirtualCamera _CMCamera;
     private Camera _camera;
     private CinemachineBrain _vCam;
@@ -19,8 +20,10 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     [SerializeField]
     private Transform _respawnPoint;
+    private Vector3 _respawnPointPosition;
     [SerializeField]
     private Transform _keyRespawnPoint;
+    private Vector3 _keyRespawnPointPosition;
     private bool _damaged = false;
 
 
@@ -42,9 +45,13 @@ public class Player : MonoBehaviour
         _UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _CMCamera = GameObject.Find("CM_Camera").GetComponent<CinemachineVirtualCamera>();
+        _levelLoader = GameObject.Find("LevelLoader").GetComponent<LevelLoader>();
         _vCam = _camera.GetComponent<CinemachineBrain>();
         _playerController = GetComponent<PlayerController>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        _respawnPointPosition = _respawnPoint.position;
+        _keyRespawnPointPosition = _keyRespawnPoint.position;
 
         if (_UIManager == null)
         {
@@ -102,7 +109,8 @@ public class Player : MonoBehaviour
 
             }
 
-            StartCoroutine(fallPlayerRespawn(_vCam, _lives));
+            StartCoroutine(FallPlayerRespawn(_vCam, _lives));
+
         }
         else if(collision.CompareTag("Enemy"))
         {
@@ -149,7 +157,7 @@ public class Player : MonoBehaviour
 
     public void ChangeSpawn()
     {
-        _respawnPoint = _keyRespawnPoint;
+        _respawnPointPosition = _keyRespawnPointPosition;
     }
 
     private IEnumerator FadeOut()
@@ -169,14 +177,17 @@ public class Player : MonoBehaviour
     }
 
     #region Respawn IEnumerators
-    IEnumerator fallPlayerRespawn(CinemachineBrain vCam, int lives)
+    IEnumerator FallPlayerRespawn(CinemachineBrain vCam, int lives)
     {
         //Camera stop and continue following
         vCam.enabled = false;
-        yield return new WaitForSeconds(1.5f);
+
+
 
         if (lives != 0)
         {
+            _levelLoader.LoadTransition();
+            yield return new WaitForSeconds(1.5f);
             vCam.enabled = true;
 
             _damaged = false;
@@ -184,11 +195,12 @@ public class Player : MonoBehaviour
             //Relocate character
             _CMCamera.enabled = false;
 
-            transform.position = _respawnPoint.position;
+            transform.position = _respawnPointPosition;
             Respawn();
             //yield return new WaitForSeconds(Mathf.Epsilon);
             _CMCamera.enabled = true;
             //cc.enabled = true;
+            _levelLoader.EndTransition();
 
         }
     }
@@ -199,22 +211,24 @@ public class Player : MonoBehaviour
         //SpriteRenderer _spriteRenderer = other.GetComponent<SpriteRenderer>();
         _spriteRenderer.enabled = false;
         vCam.enabled = false;
-        yield return new WaitForSeconds(1.5f);
 
         if (lives != 0)
         {
+            _levelLoader.LoadTransition();
+            yield return new WaitForSeconds(1.5f);
             vCam.enabled = true;
             _damaged = false;
 
             //Relocate character
             _CMCamera.enabled = false;
 
-            transform.position = _respawnPoint.position;
+            transform.position = _respawnPointPosition;
 
             _spriteRenderer.enabled = true;
             Respawn();
 
             _CMCamera.enabled = true;
+            _levelLoader.EndTransition();
         }
     }
     #endregion
