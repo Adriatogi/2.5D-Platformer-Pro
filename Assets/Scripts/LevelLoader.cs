@@ -9,18 +9,18 @@ public class LevelLoader : MonoBehaviour
     [SerializeField]
     private Animator transition;
     [SerializeField]
-    private float transitionTime = 1f;
+    //private float transitionTime = 1f;
 
-    public void LoadTransition()
+    public void LoadTransition(float transitionTime)
     {
-        StartCoroutine(LoadTransitionRoutine());
+        StartCoroutine(LoadTransitionRoutine(transitionTime));
     }
-    public void EndTransition()
-    {
-        StartCoroutine(EndTransitionRoutine());
+    public void EndTransition(float transitionTime)
+        {
+        StartCoroutine(EndTransitionRoutine(transitionTime));
     }
 
-    IEnumerator LoadTransitionRoutine()
+    IEnumerator LoadTransitionRoutine(float transitionTime)
     {
         transition.SetBool("Start", true);
 
@@ -29,12 +29,12 @@ public class LevelLoader : MonoBehaviour
         transition.SetBool("Start", false);
     }
 
-    IEnumerator EndTransitionRoutine()
+    IEnumerator EndTransitionRoutine(float transitionTime)
     {
-        transition.SetBool("End", true);
-
         yield return new WaitForSeconds(transitionTime);
 
+        transition.SetBool("End", true);
+        yield return new WaitForSeconds(0.1f);
         transition.SetBool("End", false);
     }
 }

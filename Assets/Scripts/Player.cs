@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     private Vector3 _keyRespawnPointPosition;
     private bool _damaged = false;
 
+    [SerializeField]
+    private float _respawnTime = 0.833f;
+
 
     private void OnEnable()
     {
@@ -186,8 +189,8 @@ public class Player : MonoBehaviour
 
         if (lives != 0)
         {
-            _levelLoader.LoadTransition();
-            yield return new WaitForSeconds(1.5f);
+            _levelLoader.LoadTransition(_respawnTime);
+            yield return new WaitForSeconds(_respawnTime);
             vCam.enabled = true;
 
             _damaged = false;
@@ -200,7 +203,7 @@ public class Player : MonoBehaviour
             //yield return new WaitForSeconds(Mathf.Epsilon);
             _CMCamera.enabled = true;
             //cc.enabled = true;
-            _levelLoader.EndTransition();
+            _levelLoader.EndTransition(_respawnTime);
 
         }
     }
@@ -214,8 +217,8 @@ public class Player : MonoBehaviour
 
         if (lives != 0)
         {
-            _levelLoader.LoadTransition();
-            yield return new WaitForSeconds(1.5f);
+            _levelLoader.LoadTransition(_respawnTime);
+            yield return new WaitForSeconds(_respawnTime);
             vCam.enabled = true;
             _damaged = false;
 
@@ -228,7 +231,7 @@ public class Player : MonoBehaviour
             Respawn();
 
             _CMCamera.enabled = true;
-            _levelLoader.EndTransition();
+            _levelLoader.EndTransition(_respawnTime);
         }
     }
     #endregion
